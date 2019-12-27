@@ -1,0 +1,27 @@
+{
+  "name": "sortifiler",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "Sort your files and folders easily.",
+  "repository": "yougotwill/sortifiler",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "William Grant",
+    "email": "yougotwill94@gmail.com",
+    "url": "yougotwill.github.io"
+  },
+  "keywords": [
+    "productivity",
+    "sorting",
+    "files",
+    "folders",
+    "filesystem"
+  ],
+  "dependencies": {
+    "fs-jetpack": "^2.2.3",
+    "parse-torrent": "^7.0.1"
+  }
+}
