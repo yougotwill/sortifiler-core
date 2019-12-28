@@ -8,11 +8,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": {
-    "name": "William Grant",
-    "email": "yougotwill94@gmail.com",
-    "url": "yougotwill.github.io"
-  },
+  "author": "William Grant <yougotwill94@gmail.com> (https://yougotwill@github.io/)",
   "keywords": [
     "productivity",
     "sorting",

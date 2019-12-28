@@ -3,9 +3,9 @@
 > Get your files sorted. 📚🗂
 
 ## Description
-An opinionated npm package to sort your files and folders easily.
+An opinionated API to sort your files and folders easily.
 
-**CLI & Desktop app coming soon! 🚀**
+**Desktop app coming soon! 🚀**
 
 Everyday you look at your *Desktop/Downloads* folder and think, "Damn I need to clean up this mess". 🤦
 
@@ -17,7 +17,7 @@ SortiFiler classifies files and folders and moves them into *\_Type* folders for
 
 To add SortiFiler to your project use `npm install sortifiler`.
 
-If you are looking for the SortiFiler CLI (Terminal Program) then check out [sortifiler-cli](https://github.com/yougotwill/sortifiler-cli)!
+If you are looking to sort your files from the terminal check out [SortiFiler CLI](https://github.com/yougotwill/sortifiler-cli)!
 
 ## Usage
 
