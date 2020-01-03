@@ -19,10 +19,10 @@ const SORTLIST = { // order is based on sorting priority
 const FILE_TYPES = Object.keys(SORTLIST);
 
 const _move = (object, newFolder, rootFolder, metaFiles = false) => {
-  rootFolder.dir(`${newFolder}`);
-  rootFolder.move(`${rootFolder.cwd()}/${object}`, `${rootFolder.cwd()}/${newFolder}/${object}`);
+  rootFolder.dir(newFolder);
+  rootFolder.move(rootFolder.path(object), rootFolder.path(newFolder, object));
   if (metaFiles && rootFolder.exists(`${object}.meta`) !== false) {
-    rootFolder.move(`${rootFolder.cwd()}/${object}.meta`, `${rootFolder.cwd()}/${newFolder}/${object}.meta`);
+    rootFolder.move(rootFolder.path(`${object}.meta`), rootFolder.path(newFolder, `${object}.meta`));
   }
 };
 
@@ -45,12 +45,12 @@ const sortFiles = (folderPath, metaFiles = false) => {
       foundFiles.forEach((file) => {
         if (rootFolder.exists(file) !== 'file') { return; }
         if (fileType === '_Torrents') {
-          const torrent = rootFolder.read(`${rootFolder.cwd()}/${file}`, 'buffer');
+          const torrent = rootFolder.read(rootFolder.path(file), 'buffer');
           try {
             let torrentData = parseTorrent(torrent);
             torrentData = torrentData.name;
             if (rootFolder.exists(torrentData)) {
-              _move(`${torrentData}`, fileType, rootFolder);
+              _move(torrentData, fileType, rootFolder);
             }
           } catch (e) {
             console.error(e);
@@ -64,11 +64,11 @@ const sortFiles = (folderPath, metaFiles = false) => {
           }
           const fileData = `${file.substr(0, nameIndex)}_files`;
           if (rootFolder.exists(fileData)) {
-            _move(`${fileData}`, fileType, rootFolder);
+            _move(fileData, fileType, rootFolder);
           }
         }
 
-        _move(`${file}`, fileType, rootFolder, metaFiles);
+        _move(file, fileType, rootFolder, metaFiles);
       });
     }
   });
@@ -83,7 +83,7 @@ const sortFolders = (folderPath, metaFiles = false) => {
     if (FILE_TYPES.indexOf(folder) !== -1) { return; }
     if (rootFolder.exists(folder) !== 'dir') { return; }
 
-    const childFolder = rootFolder.cwd(`${rootFolder.cwd()}/${folder}`);
+    const childFolder = rootFolder.cwd(rootFolder.path(folder));
     let bestFileCount = 0;
     let bestMatch = '';
     FILE_TYPES.forEach((fileType) => {
