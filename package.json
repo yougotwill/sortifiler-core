@@ -4,7 +4,7 @@
   "license": "MIT",
   "description": "Sort your files and folders easily.",
   "repository": "yougotwill/sortifiler",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
