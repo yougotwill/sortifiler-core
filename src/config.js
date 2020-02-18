@@ -1,6 +1,6 @@
 const Config = {
-  whitelist: [".DS_Store", "Desktop.ini", ".Spotlight-V100", ".Trashes", "test"], // Files / Folders to ignore when sorting
-  rules: { // The rules used when sorting files.
+  "whitelist": [".DS_Store", "Desktop.ini", ".Spotlight-V100", ".Trashes", "test"], // Files / Folders to ignore when sorting
+  "rules": { // The rules used when sorting files.
     "_Torrents": ["*.torrent"],
     "_Images": ["*.png", "*.jpg", "*.jpeg", "*.gif", "*.xcf", "*.stl", "*.blend", "*.obj", "*.mtl", "*.3ds", "*.tga", "*.icns", "*.piskel", "*.heif", "*.svg"],
     "_Music": ["*.mp3", "*.wav", "*.flac", "*.m4a", "*.ogg", "*.mid", "*.asd", "*.m3u", "*.pls", "*.alp", "*.asx", "*.bfxrsound", "*.m3u8", "*.als", "*.m4r", "*.opus"],
