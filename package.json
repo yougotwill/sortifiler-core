@@ -1,7 +1,7 @@
 {
   "name": "sortifiler",
   "version": "0.2.1",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "description": "Sort your files and folders easily.",
   "repository": "yougotwill/sortifiler",
   "main": "src/index.js",
