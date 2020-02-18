@@ -1,27 +1,24 @@
-'use strict';
-
 const fsJetpack = require('fs-jetpack');
 const parseTorrent = require('parse-torrent');
 
-const SORTLIST = { // order is based on sorting priority
-  '_Torrents': ['*.torrent'],
-  '_Images': ['*.png', '*.jpg', '*.jpeg', '*.gif', '*.xcf', '*.stl', '*.blend', '*.obj', '*.mtl', '*.3ds', '*.tga', '*.icns', '*.piskel', '*.heif', '*.svg'],
-  '_Music': ['*.mp3', '*.wav', '*.flac', '*.m4a', '*.ogg', '*.mid', '*.asd', '*.m3u', '*.pls', '*.alp', '*.asx', '*.bfxrsound', '*.m3u8', '*.als', '*.m4r', '*.opus'],
-  '_Videos': ['*.mkv', '*.mp4', '*.mov', '*.mpeg', '*.webm', '*.srt', '*.avi'],
-  '_Books': ['*.epub', '*.mobi'],
-  '_Scripts': ['*.py', '*.java', '*.class', '*.sh', '*.cs', '*.r', '*.itermcolors', '*.terminal', '*.theme', '*.gbaskin', '*.deltaskin', '*.tmtheme', '*.resbackup', '*.xccolortheme', '*.js', '*.cottheme'],
-  '_Web': ['*.html', '*.css', '*.js', '*.htm'],
-  '_Programs': ['*.dmg', '*.exe', '*.sh', '*.app', '*.pkg', '*.apk', '*.ipa', '*.gba', '*.gbc', '*.iso', '*.jar', '*.z64'],
-  '_Zipped': ['*.zip', '*.rar', '*.7z', '*.tar.gz', '*.tar', '*.gz', '*.unitypackage', '*.prefab', '*.fbx'],
-  '_Documents': ['*.pdf', '*.txt', '*.doc', '*.docx', '*.dotx', '*.ppt', '*.pptx', '*.md', '*.json', '*.ods', '*.log', '*.xls', '*.xlsx', '*.ttf']
+const CONFIG = require('./config');
+let FILE_TYPES = Object.keys(CONFIG.rules);
+
+const config = (userConfig) => {
+  if (userConfig) {
+    Object.keys(CONFIG).forEach((prop) => {
+      if (userConfig[prop]) {
+        CONFIG[prop] = userConfig[prop];
+      }
+    });
+    FILE_TYPES = Object.keys(CONFIG.rules);
+  }
 };
 
-const FILE_TYPES = Object.keys(SORTLIST);
-
-const _move = (object, newFolder, rootFolder, metaFiles = false) => {
+const _move = (object, newFolder, rootFolder) => {
   rootFolder.dir(newFolder);
   rootFolder.move(rootFolder.path(object), rootFolder.path(newFolder, object));
-  if (metaFiles && rootFolder.exists(`${object}.meta`) !== false) {
+  if (rootFolder.exists(`${object}.meta`) !== false) {
     rootFolder.move(rootFolder.path(`${object}.meta`), rootFolder.path(newFolder, `${object}.meta`));
   }
 };
@@ -34,15 +31,16 @@ const _matchFiles = (extensions, rootFolder) => {
   });
 };
 
-const sortFiles = (folderPath, metaFiles = false) => {
+const sortFiles = (folderPath) => {
   const rootFolder = fsJetpack.cwd(folderPath);
   const files = rootFolder.list();
   if (!files) { return; }
 
   FILE_TYPES.forEach((fileType) => {
-    const foundFiles = _matchFiles(SORTLIST[fileType], rootFolder);
+    const foundFiles = _matchFiles(CONFIG.rules[fileType], rootFolder);
     if (foundFiles.length > 0) {
       foundFiles.forEach((file) => {
+        if (CONFIG.whitelist && CONFIG.whitelist.indexOf(file) !== -1) { return; }
         if (rootFolder.exists(file) !== 'file') { return; }
         if (fileType === '_Torrents') {
           const torrent = rootFolder.read(rootFolder.path(file), 'buffer');
@@ -68,18 +66,19 @@ const sortFiles = (folderPath, metaFiles = false) => {
           }
         }
 
-        _move(file, fileType, rootFolder, metaFiles);
+        _move(file, fileType, rootFolder);
       });
     }
   });
 };
 
-const sortFolders = (folderPath, metaFiles = false) => {
+const sortFolders = (folderPath) => {
   const rootFolder = fsJetpack.cwd(folderPath);
   const folders = rootFolder.list();
   if (!folders) { return; }
 
   folders.forEach((folder) => {
+    if (CONFIG.whitelist && CONFIG.whitelist.indexOf(folder) !== -1) { return; }
     if (FILE_TYPES.indexOf(folder) !== -1) { return; }
     if (rootFolder.exists(folder) !== 'dir') { return; }
 
@@ -87,7 +86,7 @@ const sortFolders = (folderPath, metaFiles = false) => {
     let bestFileCount = 0;
     let bestMatch = '';
     FILE_TYPES.forEach((fileType) => {
-      const fileCount = _matchFiles(SORTLIST[fileType], childFolder).length;
+      const fileCount = _matchFiles(CONFIG.rules[fileType], childFolder).length;
       if (fileCount > bestFileCount) {
         bestFileCount = fileCount;
         bestMatch = fileType;
@@ -95,13 +94,13 @@ const sortFolders = (folderPath, metaFiles = false) => {
     });
 
     if (bestMatch === '') { return; }
-    _move(folder, bestMatch, rootFolder, metaFiles);
+    _move(folder, bestMatch, rootFolder);
   });
 };
 
-const sortAll = (folderPath, metaFiles = false) => {
-  sortFiles(folderPath, metaFiles);
-  sortFolders(folderPath, metaFiles);
+const sortAll = (folderPath) => {
+  sortFiles(folderPath);
+  sortFolders(folderPath);
 };
 
-module.exports = { sortFiles, sortFolders, sortAll };
+module.exports = { config, sortFiles, sortFolders, sortAll };
