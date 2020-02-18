@@ -148,7 +148,7 @@ You can override Sortifiler's settings in multiple ways:
 
 ## License
 
-[MIT](LICENSE)
+[GNU GPLv3](LICENSE)
 
 ## References
 
