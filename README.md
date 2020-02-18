@@ -144,7 +144,7 @@ You can override Sortifiler's settings in multiple ways:
 
 ## Version
 
-0.2.1
+0.2.2
 
 ## License
 
