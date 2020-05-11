@@ -7,27 +7,21 @@ let FILE_TYPES = Object.keys(CONFIG.rules);
 const config = (userConfig, extend = true) => {
   if (userConfig) {
     userConfig = JSON.parse(userConfig);
-    if (extend) { 
-      Object.keys(userConfig).forEach((prop) => {
-          if (prop == 'whitelist') {
-            if (CONFIG.whitelist) {
-              CONFIG.whitelist = CONFIG.whitelist.concat(Object.values(userConfig[prop]));
-            } else {
-              CONFIG.whitelist = userConfig[prop];
-            }
-          }
-          if (prop == 'rules') {
-            Object.keys(userConfig[prop]).forEach((rule) => {
-              if (CONFIG.rules[rule]) {
-                CONFIG.rules[rule] = CONFIG.rules[rule].concat(userConfig[prop][rule]);
-              } else {
-                CONFIG.rules[rule] = userConfig[prop][rule];
-              }
-            });
-          }
-      });
-    } else { // overwrites existing config
+    if (!extend) {
       CONFIG = userConfig;
+    } else {
+      Object.keys(userConfig).forEach((key) => {
+        switch (key) {
+          case 'rules':
+            Object.keys(userConfig[key]).forEach((rule) => {
+              CONFIG.rules[rule] = !CONFIG.rules[rule] ? userConfig[key][rule] : CONFIG.rules[rule].concat(userConfig[key][rule]);
+            });
+            break;
+          default:
+            CONFIG[key] = !CONFIG[key] ? userConfig[key] : CONFIG[key].concat(userConfig[key]);
+            break;
+        }
+      });
     }
     FILE_TYPES = Object.keys(CONFIG.rules); 
   }
