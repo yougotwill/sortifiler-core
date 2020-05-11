@@ -1,17 +1,29 @@
 const fsJetpack = require('fs-jetpack');
 const parseTorrent = require('parse-torrent');
 
-const CONFIG = require('./config');
+let CONFIG = require('./config');
 let FILE_TYPES = Object.keys(CONFIG.rules);
 
-const config = (userConfig) => {
+const config = (userConfig, extend = true) => {
   if (userConfig) {
-    Object.keys(CONFIG).forEach((prop) => {
-      if (userConfig[prop]) {
-        CONFIG[prop] = userConfig[prop];
-      }
-    });
-    FILE_TYPES = Object.keys(CONFIG.rules);
+    userConfig = JSON.parse(userConfig);
+    if (!extend) {
+      CONFIG = userConfig;
+    } else {
+      Object.keys(userConfig).forEach((key) => {
+        switch (key) {
+          case 'rules':
+            Object.keys(userConfig[key]).forEach((rule) => {
+              CONFIG.rules[rule] = !CONFIG.rules[rule] ? userConfig[key][rule] : CONFIG.rules[rule].concat(userConfig[key][rule]);
+            });
+            break;
+          default:
+            CONFIG[key] = !CONFIG[key] ? userConfig[key] : CONFIG[key].concat(userConfig[key]);
+            break;
+        }
+      });
+    }
+    FILE_TYPES = Object.keys(CONFIG.rules); 
   }
 };
 
