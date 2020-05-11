@@ -3,7 +3,7 @@
   "version": "0.2.2",
   "license": "GPL-3.0",
   "description": "Sort your files and folders easily.",
-  "repository": "yougotwill/sortifiler",
+  "repository": "yougotwill/sortifiler-core",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
